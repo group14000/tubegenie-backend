@@ -1,18 +1,39 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import { clerkMiddleware } from '@clerk/express';
-
-dotenv.config();
+import { config } from './config';
+import { connectDB } from './db/connection';
+import routes from './routes';
+import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 
 const app = express();
-const port = process.env.PORT;
 
-app.use(clerkMiddleware())
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(clerkMiddleware());
 
-app.get('/', (req, res) => {
-  res.send('Hello, TubeGenie Backend!');
-});
+// Routes
+app.use('/api', routes);
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+// 404 handler
+app.use(notFoundHandler);
+
+// Error handler (must be last)
+app.use(errorHandler);
+
+// Connect to MongoDB and start server
+const startServer = async () => {
+  try {
+    await connectDB();
+    
+    app.listen(config.port, () => {
+      console.log(`🚀 TubeGenie Backend running on port ${config.port}`);
+      console.log(`📝 Environment: ${config.nodeEnv}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
