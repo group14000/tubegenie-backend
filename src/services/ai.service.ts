@@ -1,4 +1,4 @@
-import { openai, AI_MODEL } from '../config/ai.config';
+import { openai, DEFAULT_MODEL } from '../config/ai.config';
 
 export interface ContentGenerationResult {
     titles: string[];
@@ -10,10 +10,14 @@ export interface ContentGenerationResult {
 
 export class AIService {
     /**
-     * Generate YouTube content ideas based on a topic using DeepSeek AI
+     * Generate YouTube content ideas based on a topic using specified AI model
+     * @param topic - The topic to generate content about
+     * @param modelId - The AI model to use (defaults to DEFAULT_MODEL)
      */
-    async generateContent(topic: string): Promise<ContentGenerationResult> {
+    async generateContent(topic: string, modelId?: string): Promise<ContentGenerationResult> {
         try {
+            const selectedModel = modelId || DEFAULT_MODEL;
+            
             const prompt = `You are an expert YouTube content creator. Generate comprehensive YouTube content ideas for the following topic: "${topic}".
 
 Provide your response in the following JSON format:
@@ -28,7 +32,7 @@ Provide your response in the following JSON format:
 Make sure the titles are catchy, SEO-friendly, and include relevant emojis. The description should hook viewers. Tags should be searchable keywords. Thumbnail ideas should be short, punchy text. Script outline should cover the logical flow of the video.`;
 
             const completion = await openai.chat.completions.create({
-                model: AI_MODEL,
+                model: selectedModel,
                 messages: [
                     {
                         role: "user",

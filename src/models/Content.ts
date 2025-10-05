@@ -8,6 +8,8 @@ export interface IContent extends Document {
   tags: string[];
   thumbnailIdeas: string[];
   scriptOutline: string[];
+  isFavorite: boolean;
+  aiModel: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -41,6 +43,15 @@ const ContentSchema = new Schema<IContent>(
     },
     scriptOutline: {
       type: [String],
+      required: true,
+    },
+    isFavorite: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    aiModel: {
+      type: String,
       required: true,
     },
   },
