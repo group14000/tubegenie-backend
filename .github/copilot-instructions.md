@@ -31,12 +31,13 @@ src/
 
 ## Code Patterns
 - **Imports**: Use ES6 imports (e.g., `import express from 'express'`)
-- **Server Setup**: Load config → connect DB → apply middleware → mount routes → add error handlers
+- **Server Setup**: Enable CORS → load config → connect DB → apply middleware → mount routes → add error handlers
+- **CORS**: Configured to allow frontend origin (default: http://localhost:3000) with credentials
 - **Routes**: Defined in `routes/` folder, mounted under `/api` prefix
 - **Controllers**: Handle requests, validate input, call services, return responses
 - **Services**: Contain business logic, interact with models and external APIs
 - **Models**: Mongoose schemas with TypeScript interfaces
-- **Authentication**: Use `authMiddleware` from `@clerk/express` on protected routes; access user via helper function `getUserId(req)`
+- **Authentication**: Use `authMiddleware` from `@clerk/express` on protected routes; access user via helper function `getUserId(req)` with `(req as any).auth` type assertion
 - **Error Handling**: Throw errors in services/controllers; caught by global error middleware
 
 ## API Endpoints
@@ -61,6 +62,7 @@ Required in `.env`:
 - `MONGODB_URI`
 - `OPENROUTER_API_KEY`
 - `SITE_URL`, `SITE_NAME`
+- `FRONTEND_URL` (for CORS, default: http://localhost:3000)
 
 ## TypeScript Configuration
 - **Strict Mode**: Enabled - all code must pass strict type checking
@@ -88,3 +90,4 @@ Required in `.env`:
 - `src/routes/index.ts`: Main router mounting all sub-routes
 - `src/middleware/error.middleware.ts`: Global error and 404 handlers
 - `src/index.ts`: Express app initialization and server start
+- `types/globals.d.ts`: Global type declarations (Clerk auth extension for Express Request)

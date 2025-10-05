@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { clerkMiddleware } from '@clerk/express';
 import { config } from './config';
 import { connectDB } from './db/connection';
@@ -6,6 +7,12 @@ import routes from './routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 
 const app = express();
+
+// CORS configuration
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000', // Allow frontend origin
+  credentials: true, // Allow cookies to be sent
+}));
 
 // Middleware
 app.use(express.json());

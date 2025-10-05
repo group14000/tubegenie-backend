@@ -3,7 +3,7 @@ import { contentService } from '../services/content.service';
 
 // Helper function to extract userId from Clerk auth
 function getUserId(req: Request): string | null {
-  const auth = req.auth as any;
+  const auth = (req as any).auth; // Clerk adds auth property dynamically
   return auth?.userId || auth?.sessionClaims?.sub || auth?.subject || null;
 }
 

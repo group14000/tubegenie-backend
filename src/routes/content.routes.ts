@@ -4,7 +4,16 @@ import { authMiddleware } from '../middleware/auth.middleware';
 
 const router = Router();
 
-// All routes require authentication
+// Test route without authentication (for development/testing only)
+if (process.env.NODE_ENV === 'development') {
+  router.post('/generate/test', async (req, res, next) => {
+    // Mock request with test userId
+    (req as any).auth = { userId: 'test-user-123' };
+    return contentController.generateContent(req, res, next);
+  });
+}
+
+// All routes below require authentication
 router.use(authMiddleware);
 
 // POST /api/content/generate - Generate YouTube content

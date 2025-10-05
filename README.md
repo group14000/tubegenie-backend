@@ -195,6 +195,7 @@ src/
 | `OPENROUTER_API_KEY` | OpenRouter API key | Yes |
 | `SITE_URL` | Site URL for OpenRouter | No (default: http://localhost:5000) |
 | `SITE_NAME` | Site name for OpenRouter | No (default: TubeGenie) |
+| `FRONTEND_URL` | Frontend URL for CORS | No (default: http://localhost:3000) |
 
 ## Getting API Keys
 
