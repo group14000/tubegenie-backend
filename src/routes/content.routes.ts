@@ -37,8 +37,8 @@ const router = Router();
 // Test route without authentication (for development/testing only)
 if (process.env.NODE_ENV === 'development') {
   router.post('/generate/test', async (req, res, next) => {
-    // Mock request with test userId
-    (req as any).auth = { userId: 'test-user-123' };
+    // Mock request with test userId - Clerk auth is now a function
+    (req as any).auth = () => ({ userId: 'test-user-123' });
     return contentController.generateContent(req, res, next);
   });
 }

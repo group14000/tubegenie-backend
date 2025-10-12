@@ -1,5 +1,4 @@
 import rateLimit from 'express-rate-limit';
-import { Request } from 'express';
 
 /**
  * General API rate limiter
@@ -42,12 +41,9 @@ export const aiGenerationLimiter = rateLimit({
     error: 'AI generation limit reached. Please try again later.',
     details: 'Free tier: 20 generations per hour. Upgrade for unlimited access.',
   },
-  keyGenerator: (req: Request) => {
-    // Rate limit by user ID if authenticated, otherwise by IP
-    const auth = (req as any).auth;
-    const userId = auth?.userId || auth?.sessionClaims?.sub || auth?.subject;
-    return userId || req.ip || 'anonymous';
-  },
+  // Use standard IP-based limiting by default (with IPv6 support)
+  // User-specific limiting is handled at application level via Clerk userId
+  standardHeaders: true,
   handler: (req, res) => {
     res.status(429).json({
       success: false,
@@ -64,17 +60,12 @@ export const aiGenerationLimiter = rateLimit({
  */
 export const readLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 200, // Limit each user to 200 read requests per windowMs
+  max: 200, // Limit each IP to 200 read requests per windowMs
   message: {
     success: false,
     error: 'Too many read requests, please try again later.',
   },
-  keyGenerator: (req: Request) => {
-    // Rate limit by user ID if authenticated, otherwise by IP
-    const auth = (req as any).auth;
-    const userId = auth?.userId || auth?.sessionClaims?.sub || auth?.subject;
-    return userId || req.ip || 'anonymous';
-  },
+  standardHeaders: true,
 });
 
 /**
@@ -83,14 +74,10 @@ export const readLimiter = rateLimit({
  */
 export const deleteLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 50, // Limit each user to 50 delete requests per windowMs
+  max: 50, // Limit each IP to 50 delete requests per windowMs
   message: {
     success: false,
     error: 'Too many delete requests, please try again later.',
   },
-  keyGenerator: (req: Request) => {
-    const auth = (req as any).auth;
-    const userId = auth?.userId || auth?.sessionClaims?.sub || auth?.subject;
-    return userId || req.ip || 'anonymous';
-  },
+  standardHeaders: true,
 });

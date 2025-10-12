@@ -46,14 +46,14 @@ src/
 ## Code Patterns
 - **Imports**: Use ES6 imports (e.g., `import express from 'express'`)
 - **Server Setup**: Enable CORS → apply global rate limiter → load config → connect DB → apply middleware → mount Swagger UI → mount routes → add error handlers
-- **CORS**: Configured to allow frontend origin from env var `FRONTEND_URL` (fallback: empty string) with credentials
-- **Rate Limiting**: Apply `generalLimiter` globally; use specific limiters (aiGenerationLimiter, readLimiter, deleteLimiter) per endpoint
+- **CORS**: Configured to allow frontend origin from env var `FRONTEND_URL` (default: http://localhost:3000) with credentials
+- **Rate Limiting**: Apply `generalLimiter` globally; use specific limiters (aiGenerationLimiter, readLimiter, deleteLimiter) per endpoint. All limiters use IP-based tracking with IPv6 support
 - **Routes**: Defined in `routes/` folder, mounted under `/api` prefix
 - **Swagger Documentation**: All routes have `@swagger` JSDoc comments with OpenAPI 3.0 annotations (summary, description, tags, security, parameters, requestBody, responses)
 - **Controllers**: Handle requests, validate input, call services, return responses
 - **Services**: Contain business logic, interact with models and external APIs
 - **Models**: Mongoose schemas with TypeScript interfaces; indexed fields: `userId`, `isFavorite`
-- **Authentication**: Use `authMiddleware` from `@clerk/express` on protected routes; access user via helper function `getUserId(req)` with `(req as any).auth` type assertion
+- **Authentication**: Use `authMiddleware` from `@clerk/express` on protected routes; access user via helper function `getUserId(req)` with `(req as any).auth?.()` function call
 - **Error Handling**: Throw errors in services/controllers; caught by global error middleware
 - **Development Test Route**: `POST /api/content/generate/test` available only when `NODE_ENV=development` (mocks userId as 'test-user-123')
 
@@ -78,11 +78,11 @@ src/
 
 ## Rate Limiting Strategy
 - **Global Limiter**: 100 requests per 15 minutes per IP (applies to all endpoints)
-- **AI Generation**: 20 requests per hour per user (most restrictive - protects AI costs)
-- **Read Operations**: 200 requests per 15 minutes per user (GET history, GET by ID)
-- **Delete Operations**: 50 requests per 15 minutes per user
+- **AI Generation**: 20 requests per hour per IP (most restrictive - protects AI costs)
+- **Read Operations**: 200 requests per 15 minutes per IP (GET history, GET by ID)
+- **Delete Operations**: 50 requests per 15 minutes per IP
 - **Authentication**: 5 attempts per 15 minutes per IP (if auth endpoints added)
-- **User Tracking**: Uses Clerk userId for authenticated requests; falls back to IP for public endpoints
+- **IP Handling**: Uses built-in IPv6 support from express-rate-limit
 - **Headers**: Returns `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`, `Retry-After` on limit exceeded
 
 ## AI Integration Pattern
@@ -99,7 +99,7 @@ Required in `.env`:
 - `MONGODB_URI`
 - `OPENROUTER_API_KEY`
 - `SITE_URL`, `SITE_NAME`
-- `FRONTEND_URL` (for CORS, fallback: empty string)
+- `FRONTEND_URL` (for CORS, default: http://localhost:3000)
 
 Note: Config validation in `src/config/index.ts` logs warnings (not errors) for missing required vars
 
@@ -134,7 +134,7 @@ Note: Config validation in `src/config/index.ts` logs warnings (not errors) for 
 - `src/routes/content.routes.ts`: All routes with @swagger JSDoc comments (16+ endpoints)
 - `src/routes/index.ts`: Main router mounting content routes + health check
 - `src/middleware/auth.middleware.ts`: Clerk authentication wrapper
-- `src/middleware/rate-limit.middleware.ts`: 5 rate limiters with user-specific tracking
+- `src/middleware/rate-limit.middleware.ts`: 5 rate limiters with IP-based tracking (IPv6 support built-in)
 - `src/middleware/error.middleware.ts`: Global error and 404 handlers
 - `src/index.ts`: Express app initialization with CORS → rate limiter → Swagger UI → routes → error handlers
 - `types/globals.d.ts`: Global type declarations (Clerk auth extension for Express Request)

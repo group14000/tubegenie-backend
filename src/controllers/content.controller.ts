@@ -6,7 +6,7 @@ import { isValidModel, AVAILABLE_MODELS, DEFAULT_MODEL } from '../config/ai.conf
 
 // Helper function to extract userId from Clerk auth
 function getUserId(req: Request): string | null {
-  const auth = (req as any).auth; // Clerk adds auth property dynamically
+  const auth = (req as any).auth?.(); // Clerk auth is now a function
   return auth?.userId || auth?.sessionClaims?.sub || auth?.subject || null;
 }
 
