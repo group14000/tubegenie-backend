@@ -1,4 +1,5 @@
 import { Content, IContent } from '../models/Content';
+import { getModelById } from '../config/ai.config';
 
 export interface AnalyticsSummary {
   totalContent: number;
@@ -125,6 +126,13 @@ export class AnalyticsService {
    * Extract readable model name from model ID
    */
   private extractModelName(modelId: string): string {
+    // Try to get the official model name from config
+    const model = getModelById(modelId);
+    if (model) {
+      return model.name;
+    }
+
+    // Fallback to parsing the model ID
     if (modelId.includes('deepseek')) return 'DeepSeek';
     if (modelId.includes('gemini')) return 'Gemini';
     if (modelId.includes('glm')) return 'GLM';

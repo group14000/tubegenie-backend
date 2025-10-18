@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { contentService } from '../services/content.service';
 import { exportService } from '../services/export.service';
 import { analyticsService } from '../services/analytics.service';
-import { isValidModel, AVAILABLE_MODELS, DEFAULT_MODEL } from '../config/ai.config';
+import { isValidModel, AVAILABLE_MODELS, DEFAULT_MODEL, getModelById } from '../config/ai.config';
 
 // Helper function to extract userId from Clerk auth
 function getUserId(req: Request): string | null {
@@ -52,6 +52,9 @@ export class ContentController {
       const selectedModel = model || DEFAULT_MODEL;
       const content = await contentService.generateAndSaveContent(userId, topic.trim(), selectedModel);
 
+      // Get model details for response
+      const modelInfo = getModelById(content.aiModel);
+
       res.status(201).json({
         success: true,
         data: {
@@ -61,6 +64,7 @@ export class ContentController {
           thumbnailIdeas: content.thumbnailIdeas,
           scriptOutline: content.scriptOutline,
           aiModel: content.aiModel,
+          modelName: modelInfo?.name || content.aiModel,
         },
       });
     } catch (error) {
