@@ -30,14 +30,6 @@ export const AVAILABLE_MODELS: AIModel[] = [
     isDefault: true,
   },
   {
-    id: "google/gemini-2.0-flash-exp:free",
-    name: "Gemini 2.0 Flash",
-    provider: "Google",
-    description: "Fast multimodal model supporting text and image inputs",
-    capabilities: ["text-generation", "image-understanding", "multimodal"],
-    isDefault: false,
-  },
-  {
     id: "z-ai/glm-4.5-air:free",
     name: "GLM 4.5 Air",
     provider: "Z-AI",

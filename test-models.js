@@ -7,12 +7,11 @@
 
 const models = [
   'tngtech/deepseek-r1t2-chimera:free',
-  'google/gemini-2.0-flash-exp:free',
   'z-ai/glm-4.5-air:free'
 ];
 
 const testTopic = 'AI in Healthcare 2025';
-const serverUrl = 'http://localhost:5000';
+const serverUrl = process.env.API_URL || 'http://localhost:5000';
 
 async function testModel(modelId, modelName) {
   console.log(`\n🧪 Testing ${modelName}...`);

@@ -18,12 +18,8 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: `http://localhost:${config.port}`,
-      description: 'Development server',
-    },
-    {
-      url: 'https://api.tubegenie.com',
-      description: 'Production server',
+      url: config.apiUrl || `http://localhost:${config.port}`,
+      description: config.nodeEnv === 'production' ? 'Production server' : 'Development server',
     },
   ],
   components: {

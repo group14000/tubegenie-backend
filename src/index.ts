@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import { clerkMiddleware } from '@clerk/express';
 import swaggerUi from 'swagger-ui-express';
 import { config } from './config';
@@ -11,9 +12,22 @@ import { generalLimiter } from './middleware/rate-limit.middleware';
 
 const app = express();
 
+// Security headers with Helmet
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"], // For Swagger UI
+      scriptSrc: ["'self'", "'unsafe-inline'"], // For Swagger UI
+      imgSrc: ["'self'", "data:", "https:"], // For Swagger UI
+    },
+  },
+  crossOriginEmbedderPolicy: false, // For Swagger UI
+}));
+
 // CORS configuration
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000', // Allow frontend origin
+  origin: config.frontendUrl, // Use config instead of process.env
   credentials: true, // Allow cookies to be sent
 }));
 
