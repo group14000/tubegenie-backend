@@ -27,7 +27,28 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-  origin: config.frontendUrl, // Use config instead of process.env
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    // Allow localhost for development
+    if (origin.includes('localhost')) return callback(null, true);
+
+    // Allow Vercel deployments (common patterns)
+    if (origin.includes('vercel.app')) return callback(null, true);
+
+    // Allow the configured frontend URL
+    if (config.frontendUrl && origin === config.frontendUrl) return callback(null, true);
+
+    // In development, allow common frontend ports
+    if (config.nodeEnv === 'development' && (
+      origin.startsWith('http://localhost:') ||
+      origin.startsWith('http://127.0.0.1:')
+    )) return callback(null, true);
+
+    // Reject other origins
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true, // Allow cookies to be sent
 }));
 
