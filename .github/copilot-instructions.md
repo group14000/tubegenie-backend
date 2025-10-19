@@ -10,12 +10,12 @@
 - **Security**: Helmet.js for HTTP headers; all secrets in environment variables; CORS restricted to `FRONTEND_URL`
 
 ## Workflows
-- **Development**: `pnpm dev` (ts-node direct run)
+- **Development**: `pnpm dev` (ts-node direct run with hot reload)
 - **Build**: `pnpm build` (TS to JS in dist/)
 - **Production**: `pnpm start` (compiled JS)
 - **API Docs**: Swagger UI at `/api-docs` (interactive testing)
 - **Install Deps**: `pnpm add` (not npm/yarn)
-- **Security**: See `SECURITY.md` for audit details; `DEPLOYMENT.md` for production guide
+- **MongoDB**: Local MongoDB on port 27017
 
 ## Patterns
 - **Imports**: ES6 style (e.g., `import express from 'express'`)

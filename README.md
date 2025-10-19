@@ -1,222 +1,417 @@
-# TubeGenie Backend
+# TubeGenie Backend# TubeGenie Backend
 
-A Node.js backend application for generating YouTube content ideas using AI. The application integrates Clerk authentication, MongoDB database, and DeepSeek AI (via OpenRouter) to help users create engaging YouTube content.
 
-## 🚀 Quick Start
 
-**Choose your development environment:**
+A Node.js backend application for generating YouTube content ideas using AI. The application integrates Clerk authentication, MongoDB database, and DeepSeek AI (via OpenRouter) to help users create engaging YouTube content.A Node.js backend application for generating YouTube content ideas using AI. The application integrates Clerk authentication, MongoDB database, and DeepSeek AI (via OpenRouter) to help users create engaging YouTube content.
 
-| Method | Use Case | Command | MongoDB |
-|--------|----------|---------|---------|
-| **Local Dev** | Hot reload development | `pnpm dev` | Local/Atlas |
-| **Docker** | Isolated full stack | `pnpm docker:up` | Docker container |
-| **Railway** | Production deployment | Git push | MongoDB Atlas |
 
-👉 **Jump to**: [Local Setup](#option-1-local-development-without-docker) \| [Docker Setup](#option-2-docker-development-with-mongodb) \| [Railway Deployment](#option-3-production-deployment-railway)
 
-## Features
+## Features## Features
 
-- 🤖 AI-powered YouTube content generation (titles, descriptions, tags, thumbnails, script outlines)
-- 🔐 Secure authentication with Clerk
-- 💾 MongoDB database for storing generated content
-- 📝 RESTful API with TypeScript
-- 🎯 User-specific content isolation
-- 🛡️ Rate limiting to prevent abuse and control AI costs
-- ⭐ Favorites system for bookmarking content
-- 🔍 Full-text search across all content fields
-- 🤖 Multiple AI model selection (DeepSeek, Gemini, GLM)
-- 📤 Export functionality (PDF, CSV, Plain Text, Markdown)
-- 📊 Usage analytics dashboard with insights and stats
 
-## Tech Stack
 
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Language**: TypeScript
-- **Database**: MongoDB with Mongoose
-- **Authentication**: Clerk
-- **AI**: DeepSeek AI (via OpenRouter)
-- **Package Manager**: pnpm
+- 🤖 AI-powered YouTube content generation (titles, descriptions, tags, thumbnails, script outlines)- 🤖 AI-powered YouTube content generation (titles, descriptions, tags, thumbnails, script outlines)
 
-## Prerequisites
+- 🔐 Secure authentication with Clerk- 🔐 Secure authentication with Clerk
 
-- Node.js (v18 or higher)
-- MongoDB (Docker/local or Atlas)
-- Clerk account (for authentication)
-- OpenRouter API key (for AI integration)
+- 💾 MongoDB database for storing generated content- 💾 MongoDB database for storing generated content
+
+- 📝 RESTful API with TypeScript- 📝 RESTful API with TypeScript
+
+- 🎯 User-specific content isolation- 🎯 User-specific content isolation
+
+- 🛡️ Rate limiting to prevent abuse and control AI costs- 🛡️ Rate limiting to prevent abuse and control AI costs
+
+- ⭐ Favorites system for bookmarking content- ⭐ Favorites system for bookmarking content
+
+- 🔍 Full-text search across all content fields- 🔍 Full-text search across all content fields
+
+- 🤖 Multiple AI model selection (DeepSeek, Gemini, GLM)- 🤖 Multiple AI model selection (DeepSeek, Gemini, GLM)
+
+- 📤 Export functionality (PDF, CSV, Plain Text, Markdown)- 📤 Export functionality (PDF, CSV, Plain Text, Markdown)
+
+- 📊 Usage analytics dashboard with insights and stats- 📊 Usage analytics dashboard with insights and stats
+
+
+
+## Tech Stack## Tech Stack
+
+
+
+- **Runtime**: Node.js- **Runtime**: Node.js
+
+- **Framework**: Express.js- **Framework**: Express.js
+
+- **Language**: TypeScript- **Language**: TypeScript
+
+- **Database**: MongoDB with Mongoose- **Database**: MongoDB with Mongoose
+
+- **Authentication**: Clerk- **Authentication**: Clerk
+
+- **AI**: DeepSeek AI (via OpenRouter)- **AI**: DeepSeek AI (via OpenRouter)
+
+- **Package Manager**: pnpm- **Package Manager**: pnpm
+
+
+
+## Prerequisites## Prerequisites
+
+
+
+- Node.js (v18 or higher)- Node.js (v18 or higher)
+
+- MongoDB (local installation)- MongoDB (Docker/local or Atlas)
+
+- Clerk account (for authentication)- Clerk account (for authentication)
+
+- OpenRouter API key (for AI integration)- OpenRouter API key (for AI integration)
+
 - Docker Desktop (optional, for containerized development)
+
+## Installation
 
 ## Running the Application
 
-### Option 1: Local Development (without Docker)
+1. **Clone the repository:**
 
-Perfect for development with hot reload.
+```bash### Option 1: Local Development (without Docker)
 
-### Option 1: Local Development (without Docker)
-
-Perfect for development with hot reload.
-
-**1. Clone and install:**
-```bash
 git clone <repository-url>
-cd tubegenie-backend
-pnpm install
+
+cd tubegenie-backendPerfect for development with hot reload.
+
 ```
 
-**2. Set up environment variables:**
+### Option 1: Local Development (without Docker)
 
-Create a `.env` file in the root directory:
-```env
-# Port
-PORT=5000
+2. **Install dependencies:**
+
+```bashPerfect for development with hot reload.
+
+pnpm install
+
+```**1. Clone and install:**
+
+```bash
+
+3. **Set up environment variables:**git clone <repository-url>
+
+cd tubegenie-backend
+
+Create a `.env` file in the root directory with the following variables:pnpm install
+
+```env```
+
+# Server Configuration
+
+PORT=5000**2. Set up environment variables:**
+
 NODE_ENV=development
 
-# Clerk API Keys
+Create a `.env` file in the root directory:
+
+# Clerk Authentication```env
+
+CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key# Port
+
+CLERK_SECRET_KEY=your_clerk_secret_keyPORT=5000
+
+NODE_ENV=development
+
+# MongoDB Connection (Local)
+
+MONGODB_URI=mongodb://localhost:27017/TubeGenie# Clerk API Keys
+
 CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
-CLERK_SECRET_KEY=your_clerk_secret_key
+
+# OpenRouter AI API KeyCLERK_SECRET_KEY=your_clerk_secret_key
+
+OPENROUTER_API_KEY=your_openrouter_api_key
 
 # MongoDB Connection String
-# For MongoDB Atlas (recommended):
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/TubeGenie
-# For local MongoDB:
+
+# Site Information# For MongoDB Atlas (recommended):
+
+SITE_URL=http://localhost:5000MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/TubeGenie
+
+SITE_NAME=TubeGenie# For local MongoDB:
+
 # MONGODB_URI=mongodb://localhost:27017/TubeGenie
 
-# OpenRouter AI API Key
-OPENROUTER_API_KEY=your_openrouter_api_key
-
-# Site Information (for OpenRouter)
-SITE_URL=http://localhost:5000
-SITE_NAME=TubeGenie
-
 # Frontend URL (for CORS)
-FRONTEND_URL=http://localhost:3000
+
+FRONTEND_URL=http://localhost:3000# OpenRouter AI API Key
+
+OPENROUTER_API_KEY=your_openrouter_api_key
 
 # API URL
-API_URL=http://localhost:5000
+
+API_URL=http://localhost:5000# Site Information (for OpenRouter)
+
+```SITE_URL=http://localhost:5000
+
+SITE_NAME=TubeGenie
+
+4. **Start MongoDB:**
+
+# Frontend URL (for CORS)
+
+Make sure MongoDB is installed and running locally:FRONTEND_URL=http://localhost:3000
+
+```bash
+
+# On Windows (if MongoDB is installed as a service)# API URL
+
+net start MongoDBAPI_URL=http://localhost:5000
+
 ```
 
-**3. Start MongoDB (if using local):**
-```bash
+# Or run MongoDB manually
+
+mongod**3. Start MongoDB (if using local):**
+
+``````bash
+
 mongod
-```
 
-**4. Run development server:**
+## Development```
+
+
+
+Run the development server with hot reload:**4. Run development server:**
+
+```bash```bash
+
+pnpm devpnpm dev
+
+``````
+
+
+
+The server will start on `http://localhost:5000`The server will start on `http://localhost:5000`
+
+
+
+## Build### Option 2: Docker Development (with MongoDB)
+
+
+
+Compile TypeScript to JavaScript:Run the full stack in Docker with isolated environment.
+
 ```bash
-pnpm dev
+
+pnpm build**1. Set up environment:**
+
 ```
-
-The server will start on `http://localhost:5000`
-
-### Option 2: Docker Development (with MongoDB)
-
-Run the full stack in Docker with isolated environment.
-
-**1. Set up environment:**
 
 Your `.env` file should have:
-```env
-NODE_ENV=production
-PORT=5000
-CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
-CLERK_SECRET_KEY=your_clerk_secret_key
 
-# Use 'mongodb' as hostname for Docker network
+## Production```env
+
+NODE_ENV=production
+
+Run the production build:PORT=5000
+
+```bashCLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+
+pnpm buildCLERK_SECRET_KEY=your_clerk_secret_key
+
+pnpm start
+
+```# Use 'mongodb' as hostname for Docker network
+
 MONGODB_URI=mongodb://admin:changeme@mongodb:27017/TubeGenie?authSource=admin
-MONGO_ROOT_USER=admin
+
+## API DocumentationMONGO_ROOT_USER=admin
+
 MONGO_ROOT_PASSWORD=changeme
 
+The application includes **Swagger/OpenAPI documentation** with an interactive testing interface.
+
 OPENROUTER_API_KEY=your_openrouter_api_key
-SITE_URL=http://localhost:5000
+
+**Access the Swagger UI at**: `http://localhost:5000/api-docs`SITE_URL=http://localhost:5000
+
 SITE_NAME=TubeGenie
-FRONTEND_URL=http://localhost:3000
-API_URL=http://localhost:5000
-```
 
-**2. Start all services (API + MongoDB):**
-```bash
+Features:FRONTEND_URL=http://localhost:3000
+
+- 📚 Complete API reference for all endpointsAPI_URL=http://localhost:5000
+
+- 🧪 Interactive testing - try API calls directly from your browser```
+
+- 📝 Request/response schemas with examples
+
+- 🔐 Authentication testing with Clerk JWT tokens**2. Start all services (API + MongoDB):**
+
+- 📊 Organized by categories: Content Generation, Management, Analytics, Export, Models, Health```bash
+
 pnpm docker:up
-```
 
-**3. View logs:**
-```bash
-pnpm docker:logs
-```
+## Getting API Keys```
 
-**4. Stop services:**
-```bash
-pnpm docker:down
-```
+
+
+### Clerk Authentication**3. View logs:**
+
+1. Sign up at [clerk.com](https://clerk.com)```bash
+
+2. Create a new applicationpnpm docker:logs
+
+3. Copy the publishable and secret keys from the dashboard```
+
+
+
+### OpenRouter**4. Stop services:**
+
+1. Sign up at [openrouter.ai](https://openrouter.ai)```bash
+
+2. Navigate to API Keys sectionpnpm docker:down
+
+3. Create a new API key```
+
+4. The free tier includes access to DeepSeek AI
 
 **5. Access points:**
-- API: http://localhost:5000
+
+## Available Scripts- API: http://localhost:5000
+
 - API Docs: http://localhost:5000/api-docs
-- MongoDB: localhost:27017 (admin/changeme)
 
-See [DOCKER.md](DOCKER.md) for detailed Docker setup and troubleshooting.
+```bash- MongoDB: localhost:27017 (admin/changeme)
 
-### Option 3: Production Deployment (Railway)
+# Development
+
+pnpm dev            # Run development server with hot reloadSee [DOCKER.md](DOCKER.md) for detailed Docker setup and troubleshooting.
+
+
+
+# Build### Option 3: Production Deployment (Railway)
+
+pnpm build          # Compile TypeScript to JavaScript
 
 Deploy to Railway with automatic deployments from GitHub.
 
-**Prerequisites:**
+# Production
+
+pnpm start          # Run compiled JavaScript**Prerequisites:**
+
 - Railway account (https://railway.com)
-- GitHub repository connected
-- MongoDB Atlas database (recommended)
+
+# Test- GitHub repository connected
+
+pnpm test           # Run tests (not implemented yet)- MongoDB Atlas database (recommended)
+
+```
 
 **Deployment Steps:**
 
+## Troubleshooting
+
 1. **Create MongoDB Atlas Database:**
-   - Go to https://cloud.mongodb.com
+
+### MongoDB Connection Issues   - Go to https://cloud.mongodb.com
+
    - Create a free cluster
-   - Get your connection string
+
+**Error**: `MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017`   - Get your connection string
+
    - Add Railway IP to allowlist (or use 0.0.0.0/0 for allow all)
 
-2. **Deploy to Railway:**
-   - Go to https://railway.com
-   - Click "New Project"
-   - Select "Deploy from GitHub repo"
-   - Select your `tubegenie-backend` repository
-   - Railway will auto-detect Node.js and deploy
+**Solution**:
 
-3. **Configure Environment Variables:**
+1. Make sure MongoDB is installed2. **Deploy to Railway:**
+
+2. Start MongoDB service:   - Go to https://railway.com
+
+   ```bash   - Click "New Project"
+
+   # Windows   - Select "Deploy from GitHub repo"
+
+   net start MongoDB   - Select your `tubegenie-backend` repository
+
+      - Railway will auto-detect Node.js and deploy
+
+   # Mac/Linux
+
+   sudo systemctl start mongod3. **Configure Environment Variables:**
+
+   ```   
+
+3. Verify MongoDB is running:   In Railway dashboard → Your Service → Variables, add:
+
+   ```bash   ```
+
+   mongosh   NODE_ENV=production
+
+   ```   PORT=5000
+
    
-   In Railway dashboard → Your Service → Variables, add:
-   ```
-   NODE_ENV=production
-   PORT=5000
-   
-   CLERK_PUBLISHABLE_KEY=pk_live_your_production_key
+
+### Port Already in Use   CLERK_PUBLISHABLE_KEY=pk_live_your_production_key
+
    CLERK_SECRET_KEY=sk_live_your_production_secret
-   
+
+**Error**: `Error: listen EADDRINUSE: address already in use :::5000`   
+
    MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/TubeGenie
-   
-   OPENROUTER_API_KEY=sk-or-v1-your_production_key
-   
-   SITE_URL=https://your-app.railway.app
-   SITE_NAME=TubeGenie
-   
-   FRONTEND_URL=https://tubegenie-frontend.vercel.app
-   API_URL=https://your-app.railway.app
+
+**Solution**:   
+
+1. Kill the process using port 5000:   OPENROUTER_API_KEY=sk-or-v1-your_production_key
+
+   ```bash   
+
+   # Windows   SITE_URL=https://your-app.railway.app
+
+   netstat -ano | findstr :5000   SITE_NAME=TubeGenie
+
+   taskkill /PID <PID> /F   
+
+      FRONTEND_URL=https://tubegenie-frontend.vercel.app
+
+   # Mac/Linux   API_URL=https://your-app.railway.app
+
+   lsof -ti:5000 | xargs kill -9   ```
+
    ```
 
-4. **Configure Build & Start Commands:**
-   
-   Railway auto-detects from `package.json`:
-   - **Build Command**: `pnpm build`
-   - **Start Command**: `pnpm start`
-   
-   If needed, set manually in Settings → Deploy.
+2. Or change the port in `.env` file4. **Configure Build & Start Commands:**
 
-5. **Domain Setup:**
-   - Railway provides a default domain: `your-app.railway.app`
+   
+
+### Clerk Authentication Errors   Railway auto-detects from `package.json`:
+
+   - **Build Command**: `pnpm build`
+
+**Error**: `Clerk: Invalid API key`   - **Start Command**: `pnpm start`
+
+   
+
+**Solution**:   If needed, set manually in Settings → Deploy.
+
+1. Verify your Clerk keys in `.env` file
+
+2. Make sure you're using the correct environment keys (test vs production)5. **Domain Setup:**
+
+3. Check that frontend is using matching Clerk publishable key   - Railway provides a default domain: `your-app.railway.app`
+
    - Optional: Add custom domain in Settings → Networking
 
-6. **Health Check:**
-   ```bash
-   curl https://your-app.railway.app/api/health
-   ```
+## License
 
-7. **View Logs:**
+6. **Health Check:**
+
+ISC   ```bash
+
+   curl https://your-app.railway.app/api/health
+
+## Author   ```
+
+
+
+TubeGenie Team7. **View Logs:**
+
    - In Railway dashboard → Deployments → View Logs
    - Monitor real-time logs for debugging
 
