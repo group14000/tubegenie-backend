@@ -27,7 +27,7 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-  origin: config.frontendUrl, // Use config instead of process.env
+  origin: [config.frontendUrl, 'https://tubegenie-frontend.vercel.app'], // Allow both local and production frontend
   credentials: true, // Allow cookies to be sent
 }));
 
@@ -63,6 +63,7 @@ const startServer = async () => {
       console.log(`🚀 TubeGenie Backend running on port ${config.port}`);
       console.log(`📝 Environment: ${config.nodeEnv}`);
       console.log(`📚 API Documentation: http://localhost:${config.port}/api-docs`);
+      console.log(`🌐 Frontend URL allowed: ${config.frontendUrl}`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);
