@@ -2,6 +2,18 @@
 
 A Node.js backend application for generating YouTube content ideas using AI. The application integrates Clerk authentication, MongoDB database, and DeepSeek AI (via OpenRouter) to help users create engaging YouTube content.
 
+## 🚀 Quick Start
+
+**Choose your development environment:**
+
+| Method | Use Case | Command | MongoDB |
+|--------|----------|---------|---------|
+| **Local Dev** | Hot reload development | `pnpm dev` | Local/Atlas |
+| **Docker** | Isolated full stack | `pnpm docker:up` | Docker container |
+| **Railway** | Production deployment | Git push | MongoDB Atlas |
+
+👉 **Jump to**: [Local Setup](#option-1-local-development-without-docker) \| [Docker Setup](#option-2-docker-development-with-mongodb) \| [Railway Deployment](#option-3-production-deployment-railway)
+
 ## Features
 
 - 🤖 AI-powered YouTube content generation (titles, descriptions, tags, thumbnails, script outlines)
@@ -29,24 +41,30 @@ A Node.js backend application for generating YouTube content ideas using AI. The
 ## Prerequisites
 
 - Node.js (v18 or higher)
-- MongoDB (local or Atlas)
+- MongoDB (Docker/local or Atlas)
 - Clerk account (for authentication)
 - OpenRouter API key (for AI integration)
+- Docker Desktop (optional, for containerized development)
 
-## Installation
+## Running the Application
 
-1. Clone the repository:
+### Option 1: Local Development (without Docker)
+
+Perfect for development with hot reload.
+
+### Option 1: Local Development (without Docker)
+
+Perfect for development with hot reload.
+
+**1. Clone and install:**
 ```bash
 git clone <repository-url>
 cd tubegenie-backend
-```
-
-2. Install dependencies:
-```bash
 pnpm install
 ```
 
-3. Set up environment variables:
+**2. Set up environment variables:**
+
 Create a `.env` file in the root directory:
 ```env
 # Port
@@ -58,7 +76,10 @@ CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 CLERK_SECRET_KEY=your_clerk_secret_key
 
 # MongoDB Connection String
-MONGODB_URI=mongodb://localhost:27017/TubeGenie
+# For MongoDB Atlas (recommended):
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/TubeGenie
+# For local MongoDB:
+# MONGODB_URI=mongodb://localhost:27017/TubeGenie
 
 # OpenRouter AI API Key
 OPENROUTER_API_KEY=your_openrouter_api_key
@@ -66,23 +87,177 @@ OPENROUTER_API_KEY=your_openrouter_api_key
 # Site Information (for OpenRouter)
 SITE_URL=http://localhost:5000
 SITE_NAME=TubeGenie
+
+# Frontend URL (for CORS)
+FRONTEND_URL=http://localhost:3000
+
+# API URL
+API_URL=http://localhost:5000
 ```
 
-4. Start MongoDB (if running locally):
+**3. Start MongoDB (if using local):**
 ```bash
 mongod
 ```
 
-## Development
-
-Run the development server:
+**4. Run development server:**
 ```bash
 pnpm dev
 ```
 
 The server will start on `http://localhost:5000`
 
-### Interactive API Documentation
+### Option 2: Docker Development (with MongoDB)
+
+Run the full stack in Docker with isolated environment.
+
+**1. Set up environment:**
+
+Your `.env` file should have:
+```env
+NODE_ENV=production
+PORT=5000
+CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+CLERK_SECRET_KEY=your_clerk_secret_key
+
+# Use 'mongodb' as hostname for Docker network
+MONGODB_URI=mongodb://admin:changeme@mongodb:27017/TubeGenie?authSource=admin
+MONGO_ROOT_USER=admin
+MONGO_ROOT_PASSWORD=changeme
+
+OPENROUTER_API_KEY=your_openrouter_api_key
+SITE_URL=http://localhost:5000
+SITE_NAME=TubeGenie
+FRONTEND_URL=http://localhost:3000
+API_URL=http://localhost:5000
+```
+
+**2. Start all services (API + MongoDB):**
+```bash
+pnpm docker:up
+```
+
+**3. View logs:**
+```bash
+pnpm docker:logs
+```
+
+**4. Stop services:**
+```bash
+pnpm docker:down
+```
+
+**5. Access points:**
+- API: http://localhost:5000
+- API Docs: http://localhost:5000/api-docs
+- MongoDB: localhost:27017 (admin/changeme)
+
+See [DOCKER.md](DOCKER.md) for detailed Docker setup and troubleshooting.
+
+### Option 3: Production Deployment (Railway)
+
+Deploy to Railway with automatic deployments from GitHub.
+
+**Prerequisites:**
+- Railway account (https://railway.com)
+- GitHub repository connected
+- MongoDB Atlas database (recommended)
+
+**Deployment Steps:**
+
+1. **Create MongoDB Atlas Database:**
+   - Go to https://cloud.mongodb.com
+   - Create a free cluster
+   - Get your connection string
+   - Add Railway IP to allowlist (or use 0.0.0.0/0 for allow all)
+
+2. **Deploy to Railway:**
+   - Go to https://railway.com
+   - Click "New Project"
+   - Select "Deploy from GitHub repo"
+   - Select your `tubegenie-backend` repository
+   - Railway will auto-detect Node.js and deploy
+
+3. **Configure Environment Variables:**
+   
+   In Railway dashboard → Your Service → Variables, add:
+   ```
+   NODE_ENV=production
+   PORT=5000
+   
+   CLERK_PUBLISHABLE_KEY=pk_live_your_production_key
+   CLERK_SECRET_KEY=sk_live_your_production_secret
+   
+   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/TubeGenie
+   
+   OPENROUTER_API_KEY=sk-or-v1-your_production_key
+   
+   SITE_URL=https://your-app.railway.app
+   SITE_NAME=TubeGenie
+   
+   FRONTEND_URL=https://tubegenie-frontend.vercel.app
+   API_URL=https://your-app.railway.app
+   ```
+
+4. **Configure Build & Start Commands:**
+   
+   Railway auto-detects from `package.json`:
+   - **Build Command**: `pnpm build`
+   - **Start Command**: `pnpm start`
+   
+   If needed, set manually in Settings → Deploy.
+
+5. **Domain Setup:**
+   - Railway provides a default domain: `your-app.railway.app`
+   - Optional: Add custom domain in Settings → Networking
+
+6. **Health Check:**
+   ```bash
+   curl https://your-app.railway.app/api/health
+   ```
+
+7. **View Logs:**
+   - In Railway dashboard → Deployments → View Logs
+   - Monitor real-time logs for debugging
+
+**Railway Features:**
+- ✅ Automatic deployments on git push
+- ✅ Built-in environment variable management
+- ✅ Free tier available ($5 credit/month)
+- ✅ Auto-scaling and monitoring
+- ✅ Zero-downtime deployments
+- ✅ Custom domains and SSL
+
+**Important Notes:**
+- Use MongoDB Atlas (not local MongoDB) for production
+- Set all environment variables before first deployment
+- Update `FRONTEND_URL` to match your frontend deployment
+- Update Clerk webhook URLs to point to Railway domain
+- Monitor usage to stay within Railway free tier limits
+
+**Troubleshooting Railway Deployment:**
+
+If deployment fails:
+1. Check build logs in Railway dashboard
+2. Verify all environment variables are set
+3. Ensure MongoDB Atlas IP allowlist includes Railway
+4. Test MongoDB connection string locally first
+5. Check that `package.json` has correct start script
+
+**Railway + MongoDB Atlas Setup:**
+```bash
+# Your MongoDB connection string should look like:
+mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/TubeGenie
+
+# Make sure to:
+# 1. Replace username and password
+# 2. Add ?retryWrites=true&w=majority if needed
+# 3. Whitelist Railway IPs in MongoDB Atlas Network Access
+```
+
+## Build
+
+Compile TypeScript to JavaScript:
 
 The application includes **Swagger/OpenAPI documentation** with an interactive testing interface:
 
@@ -117,76 +292,19 @@ Compile TypeScript to JavaScript:
 pnpm build
 ```
 
-## Production
+## Production (Local)
 
-Run the production build:
+Run the production build locally:
 ```bash
+pnpm build
 pnpm start
 ```
 
-## Docker Deployment
+## Interactive API Documentation
 
-### Quick Start with Docker Compose
+The application includes **Swagger/OpenAPI documentation** with an interactive testing interface:
 
-1. Build and start all services:
-```bash
-pnpm docker:up
-```
-
-2. View logs:
-```bash
-pnpm docker:logs
-```
-
-3. Stop all services:
-```bash
-pnpm docker:down
-```
-
-### Production Docker Deployment
-
-For production with MongoDB Atlas (recommended):
-
-1. Set your environment variables in `.env` or pass them directly
-2. Run:
-```bash
-pnpm docker:prod
-```
-
-Or manually:
-```bash
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-```
-
-### Docker Commands Reference
-
-```bash
-# Build Docker image
-pnpm docker:build
-
-# Run single container with .env file
-pnpm docker:run
-
-# Start all services (API + MongoDB)
-pnpm docker:up
-
-# Start production services (API only, uses Atlas)
-pnpm docker:prod
-
-# Stop all services
-pnpm docker:down
-
-# View API logs
-pnpm docker:logs
-
-# Manual Docker commands
-docker build -t tubegenie-backend .
-docker run -p 5000:5000 --env-file .env tubegenie-backend
-```
-
-## API Endpoints
-
-> **💡 Tip**: For the complete interactive API documentation with examples and testing capabilities, visit the **Swagger UI** at `http://localhost:5000/api-docs` when running the server.
+**Access the Swagger UI at**: `http://localhost:5000/api-docs` (local) or `https://your-app.railway.app/api-docs` (production)
 
 ### Health Check
 ```
@@ -549,6 +667,50 @@ src/
 2. Navigate to API Keys section
 3. Create a new API key
 4. The free tier includes access to DeepSeek AI
+
+## Quick Reference: Running the Application
+
+### Local Development (Hot Reload)
+```bash
+# 1. Set up .env with localhost MongoDB
+# 2. Run development server
+pnpm install
+pnpm dev
+# Access: http://localhost:5000
+```
+
+### Docker Development (Full Stack)
+```bash
+# 1. Update .env with MONGODB_URI=mongodb://admin:changeme@mongodb:27017/...
+# 2. Start Docker containers
+pnpm docker:up
+
+# View logs
+pnpm docker:logs
+
+# Stop containers
+pnpm docker:down
+
+# Access: http://localhost:5000
+# MongoDB: localhost:27017
+```
+
+### Production (Railway)
+```bash
+# 1. Create MongoDB Atlas cluster
+# 2. Push code to GitHub
+# 3. Connect GitHub to Railway
+# 4. Set environment variables in Railway dashboard
+# 5. Railway auto-deploys on push
+# Access: https://your-app.railway.app
+```
+
+## Documentation
+
+- **[ENV_SETUP.md](ENV_SETUP.md)** - Detailed environment variable setup for all scenarios
+- **[DOCKER.md](DOCKER.md)** - Complete Docker setup, troubleshooting, and best practices
+- **[SECURITY.md](SECURITY.md)** - Security audit and best practices
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Deployment guides for various platforms
 
 ## License
 

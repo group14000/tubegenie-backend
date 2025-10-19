@@ -2,11 +2,17 @@
 
 This document explains how to set up environment variables for different deployment scenarios.
 
+## Deployment Scenarios
+
+- **Local Development**: Run with `pnpm dev` for hot reload
+- **Docker Development**: Run with `pnpm docker:up` for containerized environment
+- **Production (Railway)**: Deploy to Railway.com with MongoDB Atlas
+
 ## Required Environment Variables
 
-Create the appropriate `.env` file based on your deployment target:
-
 ### 1. Local Development (`.env`)
+
+For running locally with `pnpm dev`:
 
 ```bash
 NODE_ENV=development
@@ -17,9 +23,14 @@ CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 CLERK_SECRET_KEY=your_clerk_secret_key
 
 # MongoDB Connection
+# Option A: Local MongoDB
 MONGODB_URI=mongodb://localhost:27017/TubeGenie
-# Or use MongoDB Atlas:
+
+# Option B: MongoDB Atlas (recommended)
 # MONGODB_URI=mongodb+srv://user:password@cluster.mongodb.net/TubeGenie
+
+# Option C: Docker MongoDB (if running mongodb container)
+# MONGODB_URI=mongodb://admin:changeme@localhost:27017/TubeGenie?authSource=admin
 
 # OpenRouter AI API Key
 OPENROUTER_API_KEY=your_openrouter_api_key
@@ -35,7 +46,11 @@ FRONTEND_URL=http://localhost:3000
 API_URL=http://localhost:5000
 ```
 
-### 2. Docker Development (`.env.docker`)
+### 2. Docker Development (`.env`)
+
+For running with `pnpm docker:up` (API + MongoDB in Docker):
+
+**Important**: Docker Compose uses the same `.env` file. Update it to use Docker MongoDB:
 
 ```bash
 NODE_ENV=production
@@ -45,8 +60,13 @@ PORT=5000
 CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 CLERK_SECRET_KEY=your_clerk_secret_key
 
-# MongoDB Atlas (recommended for Docker)
-MONGODB_URI=mongodb+srv://user:password@cluster.mongodb.net/TubeGenie
+# MongoDB Docker Configuration
+# Use 'mongodb' as hostname (docker-compose service name)
+MONGODB_URI=mongodb://admin:changeme@mongodb:27017/TubeGenie?authSource=admin
+
+# MongoDB Docker Credentials (must match docker-compose.yml)
+MONGO_ROOT_USER=admin
+MONGO_ROOT_PASSWORD=changeme
 
 # OpenRouter AI API Key
 OPENROUTER_API_KEY=your_openrouter_api_key
@@ -56,13 +76,21 @@ SITE_URL=http://localhost:5000
 SITE_NAME=TubeGenie
 
 # Frontend URL (for CORS)
-FRONTEND_URL=https://your-frontend-domain.vercel.app
+FRONTEND_URL=http://localhost:3000
 
 # API URL
 API_URL=http://localhost:5000
 ```
 
-### 3. Production Deployment (`.env.production`)
+**Note**: 
+- Change `MONGODB_URI` hostname from `localhost` to `mongodb` when using Docker
+- Change it back to `localhost` or `Atlas` when running locally without Docker
+
+### 3. Railway Production Deployment
+
+For Railway, set environment variables in the Railway dashboard (not in a file):
+
+**Railway Dashboard → Your Service → Variables:**
 
 ```bash
 NODE_ENV=production
@@ -72,22 +100,29 @@ PORT=5000
 CLERK_PUBLISHABLE_KEY=pk_live_your_production_key
 CLERK_SECRET_KEY=sk_live_your_production_secret
 
-# MongoDB Atlas Production
-MONGODB_URI=mongodb+srv://user:password@production-cluster.mongodb.net/TubeGenie
+# MongoDB Atlas (required for Railway)
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/TubeGenie?retryWrites=true&w=majority
 
 # OpenRouter AI API Key (production)
-OPENROUTER_API_KEY=your_production_openrouter_key
+OPENROUTER_API_KEY=sk-or-v1-your_production_key
 
-# Site Information
-SITE_URL=https://api.yourdomain.com
+# Site Information (use Railway domain)
+SITE_URL=https://your-app.railway.app
 SITE_NAME=TubeGenie
 
-# Frontend URL (for CORS)
-FRONTEND_URL=https://yourdomain.com
+# Frontend URL (for CORS - use your Vercel/production domain)
+FRONTEND_URL=https://tubegenie-frontend.vercel.app
 
-# API URL
-API_URL=https://api.yourdomain.com
+# API URL (use Railway domain)
+API_URL=https://your-app.railway.app
 ```
+
+**Railway Deployment Notes:**
+- Do NOT create `.env.production` file - use Railway dashboard
+- Railway automatically injects environment variables
+- Use MongoDB Atlas (Railway doesn't provide MongoDB)
+- Update URLs to use your Railway domain after first deployment
+- Set variables BEFORE deploying for the first time
 
 ## Getting API Keys
 
