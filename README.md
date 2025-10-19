@@ -124,6 +124,66 @@ Run the production build:
 pnpm start
 ```
 
+## Docker Deployment
+
+### Quick Start with Docker Compose
+
+1. Build and start all services:
+```bash
+pnpm docker:up
+```
+
+2. View logs:
+```bash
+pnpm docker:logs
+```
+
+3. Stop all services:
+```bash
+pnpm docker:down
+```
+
+### Production Docker Deployment
+
+For production with MongoDB Atlas (recommended):
+
+1. Set your environment variables in `.env` or pass them directly
+2. Run:
+```bash
+pnpm docker:prod
+```
+
+Or manually:
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+```
+
+### Docker Commands Reference
+
+```bash
+# Build Docker image
+pnpm docker:build
+
+# Run single container with .env file
+pnpm docker:run
+
+# Start all services (API + MongoDB)
+pnpm docker:up
+
+# Start production services (API only, uses Atlas)
+pnpm docker:prod
+
+# Stop all services
+pnpm docker:down
+
+# View API logs
+pnpm docker:logs
+
+# Manual Docker commands
+docker build -t tubegenie-backend .
+docker run -p 5000:5000 --env-file .env tubegenie-backend
+```
+
 ## API Endpoints
 
 > **💡 Tip**: For the complete interactive API documentation with examples and testing capabilities, visit the **Swagger UI** at `http://localhost:5000/api-docs` when running the server.
