@@ -1,14 +1,8 @@
 # TubeGenie Backend# TubeGenie Backend
 
-
-
 A Node.js backend application for generating YouTube content ideas using AI. The application integrates Clerk authentication, MongoDB database, and DeepSeek AI (via OpenRouter) to help users create engaging YouTube content.A Node.js backend application for generating YouTube content ideas using AI. The application integrates Clerk authentication, MongoDB database, and DeepSeek AI (via OpenRouter) to help users create engaging YouTube content.
 
-
-
 ## Features## Features
-
-
 
 - 🤖 AI-powered YouTube content generation (titles, descriptions, tags, thumbnails, script outlines)- 🤖 AI-powered YouTube content generation (titles, descriptions, tags, thumbnails, script outlines)
 
@@ -32,11 +26,7 @@ A Node.js backend application for generating YouTube content ideas using AI. The
 
 - 📊 Usage analytics dashboard with insights and stats- 📊 Usage analytics dashboard with insights and stats
 
-
-
 ## Tech Stack## Tech Stack
-
-
 
 - **Runtime**: Node.js- **Runtime**: Node.js
 
@@ -52,11 +42,7 @@ A Node.js backend application for generating YouTube content ideas using AI. The
 
 - **Package Manager**: pnpm- **Package Manager**: pnpm
 
-
-
 ## Prerequisites## Prerequisites
-
-
 
 - Node.js (v18 or higher)- Node.js (v18 or higher)
 
@@ -86,7 +72,7 @@ cd tubegenie-backendPerfect for development with hot reload.
 
 2. **Install dependencies:**
 
-```bashPerfect for development with hot reload.
+````bashPerfect for development with hot reload.
 
 pnpm install
 
@@ -164,13 +150,13 @@ Make sure MongoDB is installed and running locally:FRONTEND_URL=http://localhost
 
 net start MongoDBAPI_URL=http://localhost:5000
 
-```
+````
 
 # Or run MongoDB manually
 
 mongod**3. Start MongoDB (if using local):**
 
-``````bash
+````bash
 
 mongod
 
@@ -184,17 +170,11 @@ Run the development server with hot reload:**4. Run development server:**
 
 pnpm devpnpm dev
 
-``````
-
-
+````
 
 The server will start on `http://localhost:5000`The server will start on `http://localhost:5000`
 
-
-
 ## Build### Option 2: Docker Development (with MongoDB)
-
-
 
 Compile TypeScript to JavaScript:Run the full stack in Docker with isolated environment.
 
@@ -212,7 +192,7 @@ NODE_ENV=production
 
 Run the production build:PORT=5000
 
-```bashCLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+````bashCLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 
 pnpm buildCLERK_SECRET_KEY=your_clerk_secret_key
 
@@ -302,7 +282,7 @@ pnpm start          # Run compiled JavaScript**Prerequisites:**
 
 pnpm test           # Run tests (not implemented yet)- MongoDB Atlas database (recommended)
 
-```
+````
 
 **Deployment Steps:**
 
@@ -310,21 +290,21 @@ pnpm test           # Run tests (not implemented yet)- MongoDB Atlas database (r
 
 1. **Create MongoDB Atlas Database:**
 
-### MongoDB Connection Issues   - Go to https://cloud.mongodb.com
+### MongoDB Connection Issues - Go to https://cloud.mongodb.com
 
-   - Create a free cluster
+- Create a free cluster
 
-**Error**: `MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017`   - Get your connection string
+**Error**: `MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017` - Get your connection string
 
-   - Add Railway IP to allowlist (or use 0.0.0.0/0 for allow all)
+- Add Railway IP to allowlist (or use 0.0.0.0/0 for allow all)
 
 **Solution**:
 
 1. Make sure MongoDB is installed2. **Deploy to Railway:**
 
-2. Start MongoDB service:   - Go to https://railway.com
+2. Start MongoDB service: - Go to https://railway.com
 
-   ```bash   - Click "New Project"
+   ```bash - Click "New Project"
 
    # Windows   - Select "Deploy from GitHub repo"
 
@@ -336,37 +316,38 @@ pnpm test           # Run tests (not implemented yet)- MongoDB Atlas database (r
 
    sudo systemctl start mongod3. **Configure Environment Variables:**
 
-   ```   
+   ```
 
-3. Verify MongoDB is running:   In Railway dashboard → Your Service → Variables, add:
+3. Verify MongoDB is running: In Railway dashboard → Your Service → Variables, add:
 
-   ```bash   ```
+   `bash   `
 
-   mongosh   NODE_ENV=production
+   mongosh NODE_ENV=production
 
-   ```   PORT=5000
+   ```PORT=5000
 
-   
 
-### Port Already in Use   CLERK_PUBLISHABLE_KEY=pk_live_your_production_key
+   ```
 
-   CLERK_SECRET_KEY=sk_live_your_production_secret
+### Port Already in Use CLERK_PUBLISHABLE_KEY=pk_live_your_production_key
 
-**Error**: `Error: listen EADDRINUSE: address already in use :::5000`   
+CLERK_SECRET_KEY=sk_live_your_production_secret
 
-   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/TubeGenie
+**Error**: `Error: listen EADDRINUSE: address already in use :::5000`
 
-**Solution**:   
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/TubeGenie
 
-1. Kill the process using port 5000:   OPENROUTER_API_KEY=sk-or-v1-your_production_key
+**Solution**:
 
-   ```bash   
+1. Kill the process using port 5000: OPENROUTER_API_KEY=sk-or-v1-your_production_key
+
+   ````bash
 
    # Windows   SITE_URL=https://your-app.railway.app
 
    netstat -ano | findstr :5000   SITE_NAME=TubeGenie
 
-   taskkill /PID <PID> /F   
+   taskkill /PID <PID> /F
 
       FRONTEND_URL=https://tubegenie-frontend.vercel.app
 
@@ -374,48 +355,42 @@ pnpm test           # Run tests (not implemented yet)- MongoDB Atlas database (r
 
    lsof -ti:5000 | xargs kill -9   ```
 
-   ```
+   ````
 
 2. Or change the port in `.env` file4. **Configure Build & Start Commands:**
 
-   
+### Clerk Authentication Errors Railway auto-detects from `package.json`:
 
-### Clerk Authentication Errors   Railway auto-detects from `package.json`:
+- **Build Command**: `pnpm build`
 
-   - **Build Command**: `pnpm build`
+**Error**: `Clerk: Invalid API key` - **Start Command**: `pnpm start`
 
-**Error**: `Clerk: Invalid API key`   - **Start Command**: `pnpm start`
-
-   
-
-**Solution**:   If needed, set manually in Settings → Deploy.
+**Solution**: If needed, set manually in Settings → Deploy.
 
 1. Verify your Clerk keys in `.env` file
 
 2. Make sure you're using the correct environment keys (test vs production)5. **Domain Setup:**
 
-3. Check that frontend is using matching Clerk publishable key   - Railway provides a default domain: `your-app.railway.app`
-
+3. Check that frontend is using matching Clerk publishable key - Railway provides a default domain: `your-app.railway.app`
    - Optional: Add custom domain in Settings → Networking
 
 ## License
 
 6. **Health Check:**
 
-ISC   ```bash
+ISC ```bash
 
-   curl https://your-app.railway.app/api/health
+curl https://your-app.railway.app/api/health
 
-## Author   ```
-
-
+## Author ```
 
 TubeGenie Team7. **View Logs:**
 
-   - In Railway dashboard → Deployments → View Logs
-   - Monitor real-time logs for debugging
+- In Railway dashboard → Deployments → View Logs
+- Monitor real-time logs for debugging
 
 **Railway Features:**
+
 - ✅ Automatic deployments on git push
 - ✅ Built-in environment variable management
 - ✅ Free tier available ($5 credit/month)
@@ -424,6 +399,7 @@ TubeGenie Team7. **View Logs:**
 - ✅ Custom domains and SSL
 
 **Important Notes:**
+
 - Use MongoDB Atlas (not local MongoDB) for production
 - Set all environment variables before first deployment
 - Update `FRONTEND_URL` to match your frontend deployment
@@ -433,6 +409,7 @@ TubeGenie Team7. **View Logs:**
 **Troubleshooting Railway Deployment:**
 
 If deployment fails:
+
 1. Check build logs in Railway dashboard
 2. Verify all environment variables are set
 3. Ensure MongoDB Atlas IP allowlist includes Railway
@@ -440,6 +417,7 @@ If deployment fails:
 5. Check that `package.json` has correct start script
 
 **Railway + MongoDB Atlas Setup:**
+
 ```bash
 # Your MongoDB connection string should look like:
 mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/TubeGenie
@@ -459,6 +437,7 @@ The application includes **Swagger/OpenAPI documentation** with an interactive t
 **Access the Swagger UI at**: `http://localhost:5000/api-docs`
 
 Features:
+
 - 📚 Complete API reference for all endpoints
 - 🧪 Interactive testing - try API calls directly from your browser
 - 📝 Request/response schemas with examples
@@ -466,6 +445,7 @@ Features:
 - 📊 Organized by categories: Content Generation, Management, Analytics, Export, Models, Health
 
 **How to use:**
+
 1. Start the development server (`pnpm dev`)
 2. Open `http://localhost:5000/api-docs` in your browser
 3. Click on any endpoint to expand it
@@ -475,6 +455,7 @@ Features:
 7. Click "Execute" to see the response
 
 **Getting a Clerk JWT Token:**
+
 1. Create a user account through your frontend application
 2. Use browser DevTools to inspect the request headers
 3. Copy the `Authorization` header value (starts with `Bearer `)
@@ -483,6 +464,7 @@ Features:
 ## Build
 
 Compile TypeScript to JavaScript:
+
 ```bash
 pnpm build
 ```
@@ -490,6 +472,7 @@ pnpm build
 ## Production (Local)
 
 Run the production build locally:
+
 ```bash
 pnpm build
 pnpm start
@@ -502,12 +485,15 @@ The application includes **Swagger/OpenAPI documentation** with an interactive t
 **Access the Swagger UI at**: `http://localhost:5000/api-docs` (local) or `https://your-app.railway.app/api-docs` (production)
 
 ### Health Check
+
 ```
 GET /api/health
 ```
+
 No authentication required.
 
 ### Generate Content
+
 ```
 POST /api/content/generate
 Authorization: Required (Clerk)
@@ -535,6 +521,7 @@ Response:
 ```
 
 ### Get Available AI Models
+
 ```
 GET /api/content/models
 Authorization: Required (Clerk)
@@ -575,6 +562,7 @@ Response:
 ```
 
 ### Get Content History
+
 ```
 GET /api/content/history?limit=10
 Authorization: Required (Clerk)
@@ -588,6 +576,7 @@ Response:
 ```
 
 ### Get Content by ID
+
 ```
 GET /api/content/:id
 Authorization: Required (Clerk)
@@ -601,6 +590,7 @@ Response:
 ```
 
 ### Search Content
+
 ```
 GET /api/content/search?q=keyword
 Authorization: Required (Clerk)
@@ -615,6 +605,7 @@ Response:
 ```
 
 ### Get Favorites
+
 ```
 GET /api/content/favorites
 Authorization: Required (Clerk)
@@ -629,6 +620,7 @@ Response:
 ```
 
 ### Toggle Favorite
+
 ```
 PATCH /api/content/:id/favorite
 Authorization: Required (Clerk)
@@ -643,6 +635,7 @@ Response:
 ```
 
 ### Delete Content
+
 ```
 DELETE /api/content/:id
 Authorization: Required (Clerk)
@@ -656,6 +649,7 @@ Response:
 ```
 
 ### Export as PDF
+
 ```
 GET /api/content/:id/export/pdf
 Authorization: Required (Clerk)
@@ -666,6 +660,7 @@ Filename: tubegenie-{topic}.pdf
 ```
 
 ### Export as CSV (Single Content)
+
 ```
 GET /api/content/:id/export/csv
 Authorization: Required (Clerk)
@@ -676,6 +671,7 @@ Filename: tubegenie-{topic}.csv
 ```
 
 ### Export All Content as CSV
+
 ```
 GET /api/content/export/csv
 Authorization: Required (Clerk)
@@ -686,6 +682,7 @@ Filename: tubegenie-all-content.csv
 ```
 
 ### Get Content as Plain Text (for Clipboard)
+
 ```
 GET /api/content/:id/export/text
 Authorization: Required (Clerk)
@@ -702,6 +699,7 @@ Response:
 ```
 
 ### Get Content as Markdown
+
 ```
 GET /api/content/:id/export/markdown
 Authorization: Required (Clerk)
@@ -718,6 +716,7 @@ Response:
 ```
 
 ### Get Analytics Dashboard
+
 ```
 GET /api/content/analytics
 Authorization: Required (Clerk)
@@ -782,28 +781,30 @@ Response:
 
 The API implements rate limiting to protect against abuse and control AI costs:
 
-| Endpoint | Limit | Window | Reason |
-|----------|-------|--------|--------|
-| **Global** (all endpoints) | 100 requests | 15 minutes | General protection per IP |
-| `POST /api/content/generate` | 20 requests | 1 hour | AI generation costs per user |
-| `GET /api/content/history` | 200 requests | 15 minutes | Read operations per user |
-| `GET /api/content/search` | 200 requests | 15 minutes | Read operations per user |
-| `GET /api/content/favorites` | 200 requests | 15 minutes | Read operations per user |
-| `GET /api/content/models` | 200 requests | 15 minutes | Read operations per user |
-| `GET /api/content/analytics` | 200 requests | 15 minutes | Read operations per user |
-| `PATCH /api/content/:id/favorite` | 200 requests | 15 minutes | Read operations per user |
-| `GET /api/content/:id` | 200 requests | 15 minutes | Read operations per user |
-| `GET /api/content/:id/export/*` | 200 requests | 15 minutes | Read operations per user |
-| `GET /api/content/export/csv` | 200 requests | 15 minutes | Read operations per user |
-| `DELETE /api/content/:id` | 50 requests | 15 minutes | Delete operations per user |
+| Endpoint                          | Limit        | Window     | Reason                       |
+| --------------------------------- | ------------ | ---------- | ---------------------------- |
+| **Global** (all endpoints)        | 100 requests | 15 minutes | General protection per IP    |
+| `POST /api/content/generate`      | 20 requests  | 1 hour     | AI generation costs per user |
+| `GET /api/content/history`        | 200 requests | 15 minutes | Read operations per user     |
+| `GET /api/content/search`         | 200 requests | 15 minutes | Read operations per user     |
+| `GET /api/content/favorites`      | 200 requests | 15 minutes | Read operations per user     |
+| `GET /api/content/models`         | 200 requests | 15 minutes | Read operations per user     |
+| `GET /api/content/analytics`      | 200 requests | 15 minutes | Read operations per user     |
+| `PATCH /api/content/:id/favorite` | 200 requests | 15 minutes | Read operations per user     |
+| `GET /api/content/:id`            | 200 requests | 15 minutes | Read operations per user     |
+| `GET /api/content/:id/export/*`   | 200 requests | 15 minutes | Read operations per user     |
+| `GET /api/content/export/csv`     | 200 requests | 15 minutes | Read operations per user     |
+| `DELETE /api/content/:id`         | 50 requests  | 15 minutes | Delete operations per user   |
 
 **Rate Limit Headers:**
+
 - `X-RateLimit-Limit`: Maximum requests allowed
 - `X-RateLimit-Remaining`: Requests remaining in current window
 - `X-RateLimit-Reset`: Unix timestamp when the limit resets
 - `Retry-After`: Seconds to wait before retrying (on 429 error)
 
 **Example Rate Limit Error (429):**
+
 ```json
 {
   "error": "Too many AI generation requests. Please try again after 45 minutes."
@@ -838,26 +839,28 @@ src/
 
 ## Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `PORT` | Server port | No (default: 5000) |
-| `NODE_ENV` | Environment (development/production) | No (default: development) |
-| `CLERK_PUBLISHABLE_KEY` | Clerk publishable key | Yes |
-| `CLERK_SECRET_KEY` | Clerk secret key | Yes |
-| `MONGODB_URI` | MongoDB connection string | Yes |
-| `OPENROUTER_API_KEY` | OpenRouter API key | Yes |
-| `SITE_URL` | Site URL for OpenRouter | No (default: http://localhost:5000) |
-| `SITE_NAME` | Site name for OpenRouter | No (default: TubeGenie) |
-| `FRONTEND_URL` | Frontend URL for CORS | No (default: http://localhost:3000) |
+| Variable                | Description                          | Required                            |
+| ----------------------- | ------------------------------------ | ----------------------------------- |
+| `PORT`                  | Server port                          | No (default: 5000)                  |
+| `NODE_ENV`              | Environment (development/production) | No (default: development)           |
+| `CLERK_PUBLISHABLE_KEY` | Clerk publishable key                | Yes                                 |
+| `CLERK_SECRET_KEY`      | Clerk secret key                     | Yes                                 |
+| `MONGODB_URI`           | MongoDB connection string            | Yes                                 |
+| `OPENROUTER_API_KEY`    | OpenRouter API key                   | Yes                                 |
+| `SITE_URL`              | Site URL for OpenRouter              | No (default: http://localhost:5000) |
+| `SITE_NAME`             | Site name for OpenRouter             | No (default: TubeGenie)             |
+| `FRONTEND_URL`          | Frontend URL for CORS                | No (default: http://localhost:3000) |
 
 ## Getting API Keys
 
 ### Clerk
+
 1. Sign up at [clerk.com](https://clerk.com)
 2. Create a new application
 3. Copy the publishable and secret keys from the dashboard
 
 ### OpenRouter
+
 1. Sign up at [openrouter.ai](https://openrouter.ai)
 2. Navigate to API Keys section
 3. Create a new API key
@@ -866,6 +869,7 @@ src/
 ## Quick Reference: Running the Application
 
 ### Local Development (Hot Reload)
+
 ```bash
 # 1. Set up .env with localhost MongoDB
 # 2. Run development server
@@ -875,6 +879,7 @@ pnpm dev
 ```
 
 ### Docker Development (Full Stack)
+
 ```bash
 # 1. Update .env with MONGODB_URI=mongodb://admin:changeme@mongodb:27017/...
 # 2. Start Docker containers
@@ -891,6 +896,7 @@ pnpm docker:down
 ```
 
 ### Production (Railway)
+
 ```bash
 # 1. Create MongoDB Atlas cluster
 # 2. Push code to GitHub

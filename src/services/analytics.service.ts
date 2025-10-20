@@ -55,7 +55,7 @@ export class AnalyticsService {
 
       // Calculate total content and favorites
       const totalContent = allContent.length;
-      const totalFavorites = allContent.filter(c => c.isFavorite).length;
+      const totalFavorites = allContent.filter((c) => c.isFavorite).length;
 
       // Calculate content by AI model
       const contentByModel = this.calculateContentByModel(allContent);
@@ -94,11 +94,13 @@ export class AnalyticsService {
   /**
    * Calculate content distribution by AI model
    */
-  private calculateContentByModel(content: IContent[]): AnalyticsSummary['contentByModel'] {
+  private calculateContentByModel(
+    content: IContent[]
+  ): AnalyticsSummary['contentByModel'] {
     const modelCounts = new Map<string, number>();
     const modelNames = new Map<string, string>();
 
-    content.forEach(item => {
+    content.forEach((item) => {
       const modelId = item.aiModel;
       modelCounts.set(modelId, (modelCounts.get(modelId) || 0) + 1);
 
@@ -142,10 +144,12 @@ export class AnalyticsService {
   /**
    * Calculate top topics with frequency
    */
-  private calculateTopTopics(content: IContent[]): AnalyticsSummary['topTopics'] {
+  private calculateTopTopics(
+    content: IContent[]
+  ): AnalyticsSummary['topTopics'] {
     const topicMap = new Map<string, { count: number; lastGenerated: Date }>();
 
-    content.forEach(item => {
+    content.forEach((item) => {
       const topic = item.topic.toLowerCase();
       const existing = topicMap.get(topic);
 
@@ -175,7 +179,9 @@ export class AnalyticsService {
   /**
    * Calculate generation timeline for last 30 days
    */
-  private calculateTimeline(content: IContent[]): AnalyticsSummary['generationTimeline'] {
+  private calculateTimeline(
+    content: IContent[]
+  ): AnalyticsSummary['generationTimeline'] {
     const now = new Date();
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
@@ -188,7 +194,7 @@ export class AnalyticsService {
     }
 
     // Count content per day
-    content.forEach(item => {
+    content.forEach((item) => {
       const createdDate = new Date(item.createdAt);
       if (createdDate >= thirtyDaysAgo) {
         const dateStr = createdDate.toISOString().split('T')[0];
@@ -204,34 +210,45 @@ export class AnalyticsService {
   /**
    * Get recent activity
    */
-  private getRecentActivity(content: IContent[]): AnalyticsSummary['recentActivity'] {
-    return content
-      .slice(0, 10)
-      .map(item => ({
-        contentId: (item._id as any).toString(),
-        topic: item.topic,
-        createdAt: new Date(item.createdAt),
-        aiModel: this.extractModelName(item.aiModel),
-        isFavorite: item.isFavorite,
-      }));
+  private getRecentActivity(
+    content: IContent[]
+  ): AnalyticsSummary['recentActivity'] {
+    return content.slice(0, 10).map((item) => ({
+      contentId: (item._id as any).toString(),
+      topic: item.topic,
+      createdAt: new Date(item.createdAt),
+      aiModel: this.extractModelName(item.aiModel),
+      isFavorite: item.isFavorite,
+    }));
   }
 
   /**
    * Calculate usage statistics
    */
-  private calculateUsageStats(content: IContent[]): AnalyticsSummary['usageStats'] {
+  private calculateUsageStats(
+    content: IContent[]
+  ): AnalyticsSummary['usageStats'] {
     const now = new Date();
     const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    const thisWeek = content.filter(c => new Date(c.createdAt) >= weekAgo).length;
-    const thisMonth = content.filter(c => new Date(c.createdAt) >= monthAgo).length;
+    const thisWeek = content.filter(
+      (c) => new Date(c.createdAt) >= weekAgo
+    ).length;
+    const thisMonth = content.filter(
+      (c) => new Date(c.createdAt) >= monthAgo
+    ).length;
     const allTime = content.length;
 
     // Calculate average per week
     const oldestContent = content[content.length - 1];
     const firstDate = oldestContent ? new Date(oldestContent.createdAt) : now;
-    const weeksSinceFirst = Math.max(1, Math.ceil((now.getTime() - firstDate.getTime()) / (7 * 24 * 60 * 60 * 1000)));
+    const weeksSinceFirst = Math.max(
+      1,
+      Math.ceil(
+        (now.getTime() - firstDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
+      )
+    );
     const averagePerWeek = Math.round((allTime / weeksSinceFirst) * 10) / 10;
 
     return {
@@ -248,8 +265,8 @@ export class AnalyticsService {
   private generateTagCloud(content: IContent[]): AnalyticsSummary['tagCloud'] {
     const tagCounts = new Map<string, number>();
 
-    content.forEach(item => {
-      item.tags.forEach(tag => {
+    content.forEach((item) => {
+      item.tags.forEach((tag) => {
         const normalizedTag = tag.toLowerCase().replace(/^#/, '');
         tagCounts.set(normalizedTag, (tagCounts.get(normalizedTag) || 0) + 1);
       });

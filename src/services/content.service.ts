@@ -16,9 +16,10 @@ export class ContentService {
   ): Promise<IContent> {
     try {
       const selectedModel = modelId || DEFAULT_MODEL;
-      
+
       // Generate content using AI with selected model
-      const generatedContent: ContentGenerationResult = await aiService.generateContent(topic, selectedModel);
+      const generatedContent: ContentGenerationResult =
+        await aiService.generateContent(topic, selectedModel);
 
       // Create and save to database
       const content = new Content({
@@ -43,7 +44,10 @@ export class ContentService {
   /**
    * Get user's content history
    */
-  async getUserContent(userId: string, limit: number = 10): Promise<IContent[]> {
+  async getUserContent(
+    userId: string,
+    limit: number = 10
+  ): Promise<IContent[]> {
     try {
       const content = await Content.find({ userId })
         .sort({ createdAt: -1 })
@@ -58,7 +62,10 @@ export class ContentService {
   /**
    * Get content by ID
    */
-  async getContentById(contentId: string, userId: string): Promise<IContent | null> {
+  async getContentById(
+    contentId: string,
+    userId: string
+  ): Promise<IContent | null> {
     try {
       const content = await Content.findOne({ _id: contentId, userId });
       return content;
@@ -84,13 +91,16 @@ export class ContentService {
   /**
    * Toggle favorite status
    */
-  async toggleFavorite(contentId: string, userId: string): Promise<IContent | null> {
+  async toggleFavorite(
+    contentId: string,
+    userId: string
+  ): Promise<IContent | null> {
     try {
       const content = await Content.findOne({ _id: contentId, userId });
       if (!content) {
         return null;
       }
-      
+
       content.isFavorite = !content.isFavorite;
       await content.save();
       return content;
@@ -105,8 +115,9 @@ export class ContentService {
    */
   async getFavorites(userId: string): Promise<IContent[]> {
     try {
-      const favorites = await Content.find({ userId, isFavorite: true })
-        .sort({ createdAt: -1 });
+      const favorites = await Content.find({ userId, isFavorite: true }).sort({
+        createdAt: -1,
+      });
       return favorites;
     } catch (error) {
       console.error('Error fetching favorites:', error);
@@ -125,7 +136,7 @@ export class ContentService {
       }
 
       const searchRegex = new RegExp(keyword, 'i'); // Case-insensitive search
-      
+
       const results = await Content.find({
         userId,
         $or: [

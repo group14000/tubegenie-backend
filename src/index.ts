@@ -13,23 +13,27 @@ import { generalLimiter } from './middleware/rate-limit.middleware';
 const app = express();
 
 // Security headers with Helmet
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"], // For Swagger UI
-      scriptSrc: ["'self'", "'unsafe-inline'"], // For Swagger UI
-      imgSrc: ["'self'", "data:", "https:"], // For Swagger UI
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"], // For Swagger UI
+        scriptSrc: ["'self'", "'unsafe-inline'"], // For Swagger UI
+        imgSrc: ["'self'", 'data:', 'https:'], // For Swagger UI
+      },
     },
-  },
-  crossOriginEmbedderPolicy: false, // For Swagger UI
-}));
+    crossOriginEmbedderPolicy: false, // For Swagger UI
+  })
+);
 
 // CORS configuration
-app.use(cors({
-  origin: [config.frontendUrl, 'https://tubegenie-frontend.vercel.app'], // Allow both local and production frontend
-  credentials: true, // Allow cookies to be sent
-}));
+app.use(
+  cors({
+    origin: [config.frontendUrl, 'https://tubegenie-frontend.vercel.app'], // Allow both local and production frontend
+    credentials: true, // Allow cookies to be sent
+  })
+);
 
 // Global rate limiting - apply to all requests
 app.use(generalLimiter);
@@ -40,10 +44,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(clerkMiddleware());
 
 // Swagger API Documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCss: '.swagger-ui .topbar { display: none }',
-  customSiteTitle: 'TubeGenie API Documentation',
-}));
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'TubeGenie API Documentation',
+  })
+);
 
 // Routes
 app.use('/api', routes);
@@ -62,7 +70,9 @@ const startServer = async () => {
     app.listen(config.port, () => {
       console.log(`🚀 TubeGenie Backend running on port ${config.port}`);
       console.log(`📝 Environment: ${config.nodeEnv}`);
-      console.log(`📚 API Documentation: http://localhost:${config.port}/api-docs`);
+      console.log(
+        `📚 API Documentation: http://localhost:${config.port}/api-docs`
+      );
       console.log(`🌐 Frontend URL allowed: ${config.frontendUrl}`);
     });
   } catch (error) {

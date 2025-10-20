@@ -2,7 +2,12 @@ import { Request, Response, NextFunction } from 'express';
 import { contentService } from '../services/content.service';
 import { exportService } from '../services/export.service';
 import { analyticsService } from '../services/analytics.service';
-import { isValidModel, AVAILABLE_MODELS, DEFAULT_MODEL, getModelById } from '../config/ai.config';
+import {
+  isValidModel,
+  AVAILABLE_MODELS,
+  DEFAULT_MODEL,
+  getModelById,
+} from '../config/ai.config';
 
 // Helper function to extract userId from Clerk auth
 function getUserId(req: Request): string | null {
@@ -15,7 +20,11 @@ export class ContentController {
    * Generate YouTube content based on topic
    * POST /api/content/generate
    */
-  async generateContent(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async generateContent(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { topic, model } = req.body;
 
@@ -32,14 +41,14 @@ export class ContentController {
       if (model && !isValidModel(model)) {
         res.status(400).json({
           success: false,
-          error: `Invalid AI model. Available models: ${AVAILABLE_MODELS.map(m => m.id).join(', ')}`,
+          error: `Invalid AI model. Available models: ${AVAILABLE_MODELS.map((m) => m.id).join(', ')}`,
         });
         return;
       }
 
       // Get userId from Clerk auth (attached by requireAuth middleware)
       const userId = getUserId(req);
-      
+
       if (!userId) {
         res.status(401).json({
           success: false,
@@ -50,7 +59,11 @@ export class ContentController {
 
       // Generate and save content with selected model
       const selectedModel = model || DEFAULT_MODEL;
-      const content = await contentService.generateAndSaveContent(userId, topic.trim(), selectedModel);
+      const content = await contentService.generateAndSaveContent(
+        userId,
+        topic.trim(),
+        selectedModel
+      );
 
       // Get model details for response
       const modelInfo = getModelById(content.aiModel);
@@ -76,7 +89,11 @@ export class ContentController {
    * Get available AI models
    * GET /api/content/models
    */
-  async getAvailableModels(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getAvailableModels(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       res.status(200).json({
         success: true,
@@ -92,10 +109,14 @@ export class ContentController {
    * Get user's content history
    * GET /api/content/history
    */
-  async getContentHistory(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getContentHistory(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = getUserId(req);
-      
+
       if (!userId) {
         res.status(401).json({
           success: false,
@@ -120,10 +141,14 @@ export class ContentController {
    * Get content by ID
    * GET /api/content/:id
    */
-  async getContentById(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getContentById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = getUserId(req);
-      
+
       if (!userId) {
         res.status(401).json({
           success: false,
@@ -156,10 +181,14 @@ export class ContentController {
    * Delete content
    * DELETE /api/content/:id
    */
-  async deleteContent(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async deleteContent(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = getUserId(req);
-      
+
       if (!userId) {
         res.status(401).json({
           success: false,
@@ -192,10 +221,14 @@ export class ContentController {
    * Toggle favorite status
    * PATCH /api/content/:id/favorite
    */
-  async toggleFavorite(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async toggleFavorite(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = getUserId(req);
-      
+
       if (!userId) {
         res.status(401).json({
           success: false,
@@ -218,7 +251,9 @@ export class ContentController {
       res.status(200).json({
         success: true,
         data: content,
-        message: content.isFavorite ? 'Added to favorites' : 'Removed from favorites',
+        message: content.isFavorite
+          ? 'Added to favorites'
+          : 'Removed from favorites',
       });
     } catch (error) {
       next(error);
@@ -229,10 +264,14 @@ export class ContentController {
    * Get favorite content
    * GET /api/content/favorites
    */
-  async getFavorites(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getFavorites(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = getUserId(req);
-      
+
       if (!userId) {
         res.status(401).json({
           success: false,
@@ -257,10 +296,14 @@ export class ContentController {
    * Search content
    * GET /api/content/search?q=keyword
    */
-  async searchContent(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async searchContent(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = getUserId(req);
-      
+
       if (!userId) {
         res.status(401).json({
           success: false,
@@ -279,7 +322,10 @@ export class ContentController {
         return;
       }
 
-      const results = await contentService.searchContent(userId, keyword.trim());
+      const results = await contentService.searchContent(
+        userId,
+        keyword.trim()
+      );
 
       res.status(200).json({
         success: true,
@@ -295,10 +341,14 @@ export class ContentController {
    * Export content as PDF
    * GET /api/content/:id/export/pdf
    */
-  async exportPDF(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async exportPDF(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = getUserId(req);
-      
+
       if (!userId) {
         res.status(401).json({
           success: false,
@@ -323,7 +373,10 @@ export class ContentController {
 
       // Set response headers
       res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `attachment; filename="tubegenie-${content.topic.replace(/\s+/g, '-').toLowerCase()}.pdf"`);
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="tubegenie-${content.topic.replace(/\s+/g, '-').toLowerCase()}.pdf"`
+      );
 
       // Pipe PDF to response
       pdfDoc.pipe(res);
@@ -336,10 +389,14 @@ export class ContentController {
    * Export content as CSV
    * GET /api/content/:id/export/csv
    */
-  async exportCSV(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async exportCSV(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = getUserId(req);
-      
+
       if (!userId) {
         res.status(401).json({
           success: false,
@@ -364,7 +421,10 @@ export class ContentController {
 
       // Set response headers
       res.setHeader('Content-Type', 'text/csv');
-      res.setHeader('Content-Disposition', `attachment; filename="tubegenie-${content.topic.replace(/\s+/g, '-').toLowerCase()}.csv"`);
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="tubegenie-${content.topic.replace(/\s+/g, '-').toLowerCase()}.csv"`
+      );
 
       // Send CSV
       res.send(csv);
@@ -377,10 +437,14 @@ export class ContentController {
    * Export all content as CSV
    * GET /api/content/export/csv
    */
-  async exportAllCSV(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async exportAllCSV(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = getUserId(req);
-      
+
       if (!userId) {
         res.status(401).json({
           success: false,
@@ -405,7 +469,10 @@ export class ContentController {
 
       // Set response headers
       res.setHeader('Content-Type', 'text/csv');
-      res.setHeader('Content-Disposition', 'attachment; filename="tubegenie-all-content.csv"');
+      res.setHeader(
+        'Content-Disposition',
+        'attachment; filename="tubegenie-all-content.csv"'
+      );
 
       // Send CSV
       res.send(csv);
@@ -418,10 +485,14 @@ export class ContentController {
    * Get content formatted for clipboard (plain text)
    * GET /api/content/:id/export/text
    */
-  async exportText(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async exportText(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = getUserId(req);
-      
+
       if (!userId) {
         res.status(401).json({
           success: false,
@@ -460,10 +531,14 @@ export class ContentController {
    * Get content formatted as markdown
    * GET /api/content/:id/export/markdown
    */
-  async exportMarkdown(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async exportMarkdown(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = getUserId(req);
-      
+
       if (!userId) {
         res.status(401).json({
           success: false,
@@ -502,10 +577,14 @@ export class ContentController {
    * Get user analytics dashboard
    * GET /api/content/analytics
    */
-  async getAnalytics(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getAnalytics(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = getUserId(req);
-      
+
       if (!userId) {
         res.status(401).json({
           success: false,

@@ -39,7 +39,8 @@ export const aiGenerationLimiter = rateLimit({
   message: {
     success: false,
     error: 'AI generation limit reached. Please try again later.',
-    details: 'Free tier: 20 generations per hour. Upgrade for unlimited access.',
+    details:
+      'Free tier: 20 generations per hour. Upgrade for unlimited access.',
   },
   // Use standard IP-based limiting by default (with IPv6 support)
   // User-specific limiting is handled at application level via Clerk userId
@@ -48,7 +49,8 @@ export const aiGenerationLimiter = rateLimit({
     res.status(429).json({
       success: false,
       error: 'AI generation limit reached. Please try again later.',
-      details: 'Free tier: 20 generations per hour. Upgrade for unlimited access.',
+      details:
+        'Free tier: 20 generations per hour. Upgrade for unlimited access.',
       retryAfter: res.getHeader('Retry-After'),
     });
   },

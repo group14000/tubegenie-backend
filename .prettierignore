@@ -1,0 +1,13 @@
+dist/
+node_modules/
+*.log
+.env
+.env.local
+.env.production
+.env.staging
+coverage/
+.nyc_output/
+*.tgz
+*.tar.gz
+.DS_Store
+Thumbs.db

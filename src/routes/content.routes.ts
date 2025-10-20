@@ -1,7 +1,11 @@
 import { Router } from 'express';
 import { contentController } from '../controllers/content.controller';
 import { authMiddleware } from '../middleware/auth.middleware';
-import { aiGenerationLimiter, readLimiter, deleteLimiter } from '../middleware/rate-limit.middleware';
+import {
+  aiGenerationLimiter,
+  readLimiter,
+  deleteLimiter,
+} from '../middleware/rate-limit.middleware';
 
 const router = Router();
 
@@ -73,7 +77,11 @@ router.use(authMiddleware);
  *       429:
  *         $ref: '#/components/responses/RateLimitError'
  */
-router.get('/analytics', readLimiter, contentController.getAnalytics.bind(contentController));
+router.get(
+  '/analytics',
+  readLimiter,
+  contentController.getAnalytics.bind(contentController)
+);
 
 /**
  * @swagger
@@ -105,7 +113,11 @@ router.get('/analytics', readLimiter, contentController.getAnalytics.bind(conten
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/models', readLimiter, contentController.getAvailableModels.bind(contentController));
+router.get(
+  '/models',
+  readLimiter,
+  contentController.getAvailableModels.bind(contentController)
+);
 
 /**
  * @swagger
@@ -142,7 +154,11 @@ router.get('/models', readLimiter, contentController.getAvailableModels.bind(con
  *       429:
  *         $ref: '#/components/responses/RateLimitError'
  */
-router.post('/generate', aiGenerationLimiter, contentController.generateContent.bind(contentController));
+router.post(
+  '/generate',
+  aiGenerationLimiter,
+  contentController.generateContent.bind(contentController)
+);
 
 /**
  * @swagger
@@ -181,7 +197,11 @@ router.post('/generate', aiGenerationLimiter, contentController.generateContent.
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/search', readLimiter, contentController.searchContent.bind(contentController));
+router.get(
+  '/search',
+  readLimiter,
+  contentController.searchContent.bind(contentController)
+);
 
 /**
  * @swagger
@@ -210,7 +230,11 @@ router.get('/search', readLimiter, contentController.searchContent.bind(contentC
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/favorites', readLimiter, contentController.getFavorites.bind(contentController));
+router.get(
+  '/favorites',
+  readLimiter,
+  contentController.getFavorites.bind(contentController)
+);
 
 /**
  * @swagger
@@ -247,7 +271,11 @@ router.get('/favorites', readLimiter, contentController.getFavorites.bind(conten
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/history', readLimiter, contentController.getContentHistory.bind(contentController));
+router.get(
+  '/history',
+  readLimiter,
+  contentController.getContentHistory.bind(contentController)
+);
 
 /**
  * @swagger
@@ -270,7 +298,11 @@ router.get('/history', readLimiter, contentController.getContentHistory.bind(con
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/export/csv', readLimiter, contentController.exportAllCSV.bind(contentController));
+router.get(
+  '/export/csv',
+  readLimiter,
+  contentController.exportAllCSV.bind(contentController)
+);
 
 /**
  * @swagger
@@ -310,7 +342,11 @@ router.get('/export/csv', readLimiter, contentController.exportAllCSV.bind(conte
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-router.patch('/:id/favorite', readLimiter, contentController.toggleFavorite.bind(contentController));
+router.patch(
+  '/:id/favorite',
+  readLimiter,
+  contentController.toggleFavorite.bind(contentController)
+);
 
 /**
  * @swagger
@@ -342,7 +378,11 @@ router.patch('/:id/favorite', readLimiter, contentController.toggleFavorite.bind
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/:id/export/pdf', readLimiter, contentController.exportPDF.bind(contentController));
+router.get(
+  '/:id/export/pdf',
+  readLimiter,
+  contentController.exportPDF.bind(contentController)
+);
 
 /**
  * @swagger
@@ -373,7 +413,11 @@ router.get('/:id/export/pdf', readLimiter, contentController.exportPDF.bind(cont
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/:id/export/csv', readLimiter, contentController.exportCSV.bind(contentController));
+router.get(
+  '/:id/export/csv',
+  readLimiter,
+  contentController.exportCSV.bind(contentController)
+);
 
 /**
  * @swagger
@@ -405,7 +449,11 @@ router.get('/:id/export/csv', readLimiter, contentController.exportCSV.bind(cont
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/:id/export/text', readLimiter, contentController.exportText.bind(contentController));
+router.get(
+  '/:id/export/text',
+  readLimiter,
+  contentController.exportText.bind(contentController)
+);
 
 /**
  * @swagger
@@ -437,7 +485,11 @@ router.get('/:id/export/text', readLimiter, contentController.exportText.bind(co
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/:id/export/markdown', readLimiter, contentController.exportMarkdown.bind(contentController));
+router.get(
+  '/:id/export/markdown',
+  readLimiter,
+  contentController.exportMarkdown.bind(contentController)
+);
 
 /**
  * @swagger
@@ -506,7 +558,15 @@ router.get('/:id/export/markdown', readLimiter, contentController.exportMarkdown
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/:id', readLimiter, contentController.getContentById.bind(contentController));
-router.delete('/:id', deleteLimiter, contentController.deleteContent.bind(contentController));
+router.get(
+  '/:id',
+  readLimiter,
+  contentController.getContentById.bind(contentController)
+);
+router.delete(
+  '/:id',
+  deleteLimiter,
+  contentController.deleteContent.bind(contentController)
+);
 
 export default router;

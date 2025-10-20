@@ -6,7 +6,8 @@ const swaggerDefinition = {
   info: {
     title: 'TubeGenie API',
     version: '1.0.0',
-    description: 'AI-Powered YouTube Content Generation API with advanced features including content favorites, search, export, and analytics dashboard.',
+    description:
+      'AI-Powered YouTube Content Generation API with advanced features including content favorites, search, export, and analytics dashboard.',
     contact: {
       name: 'TubeGenie Support',
       email: 'support@tubegenie.com',
@@ -19,7 +20,10 @@ const swaggerDefinition = {
   servers: [
     {
       url: config.apiUrl || `http://localhost:${config.port}`,
-      description: config.nodeEnv === 'production' ? 'Production server' : 'Development server',
+      description:
+        config.nodeEnv === 'production'
+          ? 'Production server'
+          : 'Development server',
     },
   ],
   components: {
@@ -67,7 +71,10 @@ const swaggerDefinition = {
           titles: {
             type: 'array',
             items: { type: 'string' },
-            example: ['AI in Healthcare: Top 5 Innovations 🏥', 'Healthcare AI Revolution 2025 🤖'],
+            example: [
+              'AI in Healthcare: Top 5 Innovations 🏥',
+              'Healthcare AI Revolution 2025 🤖',
+            ],
           },
           description: {
             type: 'string',
@@ -86,7 +93,12 @@ const swaggerDefinition = {
           scriptOutline: {
             type: 'array',
             items: { type: 'string' },
-            example: ['Introduction', 'Current AI Applications', 'Future Trends', 'Conclusion'],
+            example: [
+              'Introduction',
+              'Current AI Applications',
+              'Future Trends',
+              'Conclusion',
+            ],
           },
           aiModel: {
             type: 'string',
@@ -165,7 +177,8 @@ const swaggerDefinition = {
           },
           description: {
             type: 'string',
-            example: 'Advanced reasoning model with superior problem-solving capabilities',
+            example:
+              'Advanced reasoning model with superior problem-solving capabilities',
           },
           capabilities: {
             type: 'array',

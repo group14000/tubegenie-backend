@@ -28,7 +28,7 @@ const requiredEnvVars = [
   'CLERK_PUBLISHABLE_KEY',
   'CLERK_SECRET_KEY',
   'OPENROUTER_API_KEY',
-  'MONGODB_URI'
+  'MONGODB_URI',
 ];
 
 for (const envVar of requiredEnvVars) {
